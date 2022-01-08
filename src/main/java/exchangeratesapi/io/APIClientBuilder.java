@@ -8,6 +8,7 @@ import exchangeratesapi.io.client.service.ExchangeRatesApiV1RestService;
 import exchangeratesapi.io.client.service.ServiceFactory;
 
 import javax.net.ssl.SSLContext;
+import java.util.concurrent.ExecutorService;
 
 /**
  * The MIT License (MIT)
@@ -55,6 +56,16 @@ public class APIClientBuilder {
     public ApiAsyncRestClient buildAsyncRestClient(){
         return new ApiAsyncRestClientImpl(buildService(), apiKey);
     }
+
+    /**
+     * Returns a ApiAsyncRestClient that will process responses using the ExecutorService
+     *
+     * @return
+     */
+    public ApiAsyncRestClient buildAsyncRestClient(ExecutorService responseService){
+        return new ApiAsyncRestClientImpl(buildService(), responseService,apiKey);
+    }
+
 
     /**
      * Returns a ApiRestClient.
