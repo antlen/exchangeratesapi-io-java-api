@@ -79,8 +79,9 @@ public class ServiceFactory {
     /**
      * If you set SSL to true then ensure that your local ssl certs are upto date.
      *
-     * Update the keystore in your local JVM:  'keytool -import -alias <Replace certificate Alias name> -keystore $JAVA_HOME\jre\lib\security\cacerts -file <Replace your Certificate file location>'
-     *
+     * <pre>
+     * Update the keystore in your local JVM:  'keytool -import -alias *ALIAS_NAME* -keystore $JAVA_HOME\jre\lib\security\cacerts -file *CERT_FILE_LOCATION*'
+     *</pre>
      * The other alternative is to use ServiceFactory(SSLContext)
      */
     public ExchangeRatesApiV1RestService buildV1SSLRestService(){
