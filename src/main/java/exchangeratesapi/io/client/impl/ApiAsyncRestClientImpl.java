@@ -62,11 +62,25 @@ public class ApiAsyncRestClientImpl implements ApiAsyncRestClient {
         }
     }
 
-    private <T> CompletionStage<T> invoke(InvocationCallback<T> callback, Function<String, CompletionStage<T>>  t){
-        return respond(t.apply(null), v -> {
-            callback.completed(v);
-            return v;
-        });
+    private <T> CompletionStage<T> handleCallbackAndExceptions(InvocationCallback<T> callback, CompletionStage<T>  f){
+        if(callback == null){
+            f.toCompletableFuture().exceptionally(throwable -> {
+                throwable.printStackTrace();;
+                return null;
+            });
+            return f;
+        }else{
+            f = f.thenApplyAsync(v -> {
+                callback.completed(v);
+                return v;
+            }, responseService);
+
+            f.toCompletableFuture().exceptionally(throwable -> {
+                responseService.submit( () ->callback.failed(throwable));
+                return null;
+            });
+            return f;
+        }
     }
 
     @Override
@@ -81,7 +95,7 @@ public class ApiAsyncRestClientImpl implements ApiAsyncRestClient {
 
     @Override
     public CompletableFuture<ExchangeRates> getExchangeRates(String base, InvocationCallback<ExchangeRates> callback,String ... symbols) {
-        return invoke(callback,  result -> service.getExchangeRates(apiKey, base, symbols)).toCompletableFuture();
+        return handleCallbackAndExceptions(callback,  service.getExchangeRates(apiKey, base, symbols)).toCompletableFuture();
     }
 
     @Override
@@ -96,7 +110,7 @@ public class ApiAsyncRestClientImpl implements ApiAsyncRestClient {
 
     @Override
     public CompletableFuture<ExchangeRates> getHistoricalRates(LocalDate date, String base, InvocationCallback<ExchangeRates> callback, String... symbols) {
-        return invoke(callback,  result -> service.getHistoricalRates(apiKey, RateDateFormatter.toString(date),
+        return handleCallbackAndExceptions(callback, service.getHistoricalRates(apiKey, RateDateFormatter.toString(date),
                                                                         base, symbols)).toCompletableFuture();
     }
 }
