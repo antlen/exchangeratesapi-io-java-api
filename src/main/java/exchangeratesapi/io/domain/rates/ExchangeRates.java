@@ -104,4 +104,16 @@ public class ExchangeRates {
         return Collections.unmodifiableMap(rates);
     }
 
+    @Override
+    public String toString() {
+        return "ExchangeRates{" +
+                "success=" + success +
+                ", historical=" + historical +
+                ", timestamp=" + timestamp +
+                ", base='" + base + '\'' +
+                ", date='" + date + '\'' +
+                ", rates=" + rates +
+                ", localDate=" + localDate +
+                '}';
+    }
 }

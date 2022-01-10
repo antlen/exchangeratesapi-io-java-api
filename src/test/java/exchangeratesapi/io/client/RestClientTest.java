@@ -23,7 +23,17 @@ public class RestClientTest {
         // printExchangeRates(test.client.getExchangeRates());
         // printExchangeRates(test.client.getExchangeRates("USD"));
         // printExchangeRates(test.client.getExchangeRates("USD", "HKD", "JPY"));
-         future = test.async.getExchangeRates(new PrintCallback());
+         future = test.async.getExchangeRates(new InvocationCallback<ExchangeRates>() {
+             @Override
+             public void completed(ExchangeRates exchangeRates) {
+                 System.out.println(exchangeRates);
+             }
+
+             @Override
+             public void failed(Throwable throwable) {
+                    throwable.printStackTrace();
+             }
+         });
        // future = test.async.getHistoricalRates(RateDateFormatter.toDateTime("2021-10-09"),new PrintCallback());
 
         // because this is a text the jvm will exit so need to wait for the response
