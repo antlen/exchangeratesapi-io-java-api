@@ -52,7 +52,7 @@ client.getExchangeRates(new InvocationCallback<ExchangeRates>() {
        }
    });
 ``` 
-or use the CompletableFuture..
+or use a CompletableFuture..
 ``` 
 client.getExchangeRates(null)
      .thenAccept(exchangeRates -> System.out.println(exchangeRates))
@@ -87,7 +87,7 @@ client.getHistoricalRates(date, new InvocationCallback<>() {
          }
    });
 ``` 
-or use the CompletableFuture..
+or use a CompletableFuture..
 ``` 
 async.getHistoricalRates(date, null)
      .thenAccept(exchangeRates -> System.out.println(exchangeRates))
