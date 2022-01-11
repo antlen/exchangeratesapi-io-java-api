@@ -6,7 +6,7 @@
         <dependency>
             <groupId>org.estonlabs</groupId>
             <artifactId>exchangeratesapi-io-java-api</artifactId>
-            <version>1.2</version>
+            <version>1.3</version>
         </dependency>
 ```
 
