@@ -4,7 +4,7 @@
 
     <groupId>org.estonlabs</groupId>
     <artifactId>exchangeratesapi-io-java-api</artifactId>
-    <version>1.3</version>
+    <version>1.4-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Java project for connecting the exchangeratesapi.io rest api</description>
@@ -31,7 +31,7 @@
         <connection>scm:git:git@github.com:antlen/exchangeratesapi-io-java-api.git</connection>
         <developerConnection>scm:git:git@github.com:antlen/exchangeratesapi-io-java-api.git</developerConnection>
         <url>https://github.com/antlen/exchangeratesapi-io-java-api</url>
-        <tag>exchangeratesapi-io-java-api-1.3</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
