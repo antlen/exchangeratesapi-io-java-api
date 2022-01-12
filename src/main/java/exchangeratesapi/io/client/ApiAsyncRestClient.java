@@ -1,5 +1,6 @@
 package exchangeratesapi.io.client;
 
+import exchangeratesapi.io.domain.conversion.ConversionDetails;
 import exchangeratesapi.io.domain.rates.ExchangeRates;
 
 import javax.ws.rs.client.InvocationCallback;
@@ -9,7 +10,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * The MIT License (MIT)
  *
- *	Copyright (c) 2021 antlen
+ *	Copyright (c) 2022 antlen
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -90,4 +91,23 @@ public interface ApiAsyncRestClient {
      * @return
      */
     CompletableFuture<ExchangeRates> getHistoricalRates(LocalDate date, String base, InvocationCallback<ExchangeRates> callback, String ... symbols);
+
+    /**
+     * Converts the amount from one currency to another using the rate on the date provided
+     * @param from
+     * @param to
+     * @param amount
+     * @param date
+     * @return
+     */
+    CompletableFuture<ConversionDetails> getConversion(String from, String to, double amount, LocalDate date, InvocationCallback<ConversionDetails> callback);
+
+    /**
+     * Converts the amount from one currency to another using the current rate
+     * @param from
+     * @param to
+     * @param amount
+     * @return
+     */
+    CompletableFuture<ConversionDetails> getConversion(String from, String to, double amount, InvocationCallback<ConversionDetails> callback);
 }

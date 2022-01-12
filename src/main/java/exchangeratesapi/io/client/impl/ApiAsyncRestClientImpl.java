@@ -3,6 +3,8 @@ package exchangeratesapi.io.client.impl;
 import exchangeratesapi.io.client.ApiAsyncRestClient;
 import exchangeratesapi.io.client.service.ExchangeRatesApiV1RestService;
 import exchangeratesapi.io.client.util.RateDateFormatter;
+import exchangeratesapi.io.client.util.SymbolFormatter;
+import exchangeratesapi.io.domain.conversion.ConversionDetails;
 import exchangeratesapi.io.domain.rates.ExchangeRates;
 
 import javax.ws.rs.client.InvocationCallback;
@@ -15,7 +17,7 @@ import java.util.function.Function;
 /**
  * The MIT License (MIT)
  *
- *	Copyright (c) 2021 antlen
+ *	Copyright (c) 2022 antlen
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -73,10 +75,14 @@ public class ApiAsyncRestClientImpl implements ApiAsyncRestClient {
             f = f.thenApplyAsync(v -> {
                 callback.completed(v);
                 return v;
-            }, responseService);
+            },  responseService != null? responseService : f.toCompletableFuture().defaultExecutor());
 
             f.toCompletableFuture().exceptionally(throwable -> {
-                responseService.submit( () ->callback.failed(throwable));
+                if(responseService!= null){
+                    responseService.submit( () ->callback.failed(throwable));
+                }else{
+                    callback.failed(throwable);
+                }
                 return null;
             });
             return f;
@@ -95,7 +101,7 @@ public class ApiAsyncRestClientImpl implements ApiAsyncRestClient {
 
     @Override
     public CompletableFuture<ExchangeRates> getExchangeRates(String base, InvocationCallback<ExchangeRates> callback,String ... symbols) {
-        return handleCallbackAndExceptions(callback,  service.getExchangeRates(apiKey, base, symbols)).toCompletableFuture();
+        return handleCallbackAndExceptions(callback,  service.getExchangeRates(apiKey, base, SymbolFormatter.getSymbols(symbols))).toCompletableFuture();
     }
 
     @Override
@@ -111,6 +117,17 @@ public class ApiAsyncRestClientImpl implements ApiAsyncRestClient {
     @Override
     public CompletableFuture<ExchangeRates> getHistoricalRates(LocalDate date, String base, InvocationCallback<ExchangeRates> callback, String... symbols) {
         return handleCallbackAndExceptions(callback, service.getHistoricalRates(apiKey, RateDateFormatter.toString(date),
-                                                                        base, symbols)).toCompletableFuture();
+                                                                        base, SymbolFormatter.getSymbols(symbols))).toCompletableFuture();
+    }
+
+
+    @Override
+    public CompletableFuture<ConversionDetails> getConversion(String from, String to, double amount, InvocationCallback<ConversionDetails> callback) {
+        return getConversion(from, to, amount, null, callback);
+    }
+
+    @Override
+    public CompletableFuture<ConversionDetails> getConversion(String from, String to, double amount, LocalDate date, InvocationCallback<ConversionDetails> callback) {
+        return handleCallbackAndExceptions(callback, service.getConversion(apiKey,from, to, amount, RateDateFormatter.toString(date))).toCompletableFuture();
     }
 }

@@ -1,13 +1,13 @@
 package exchangeratesapi.io.client;
 
+import exchangeratesapi.io.domain.conversion.ConversionDetails;
 import exchangeratesapi.io.domain.rates.ExchangeRates;
-
 import java.time.LocalDate;
 
 /**
  * The MIT License (MIT)
  *
- *	Copyright (c) 2021 antlen
+ *	Copyright (c) 2022 antlen
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -65,7 +65,7 @@ public interface ApiRestClient {
     ExchangeRates getHistoricalRates(LocalDate date);
 
     /**
-     * Returns the exchanges rates on the date providedfor the base currency.
+     * Returns the exchanges rates on the date provided for the base currency.
      * <B>Not available using the Free API Key</B>
      * @param date
      * @param base
@@ -82,4 +82,23 @@ public interface ApiRestClient {
      * @return
      */
     ExchangeRates getHistoricalRates(LocalDate date, String base, String ... symbols);
+
+    /**
+     * Converts the amount from one currency to another using the rate on the date provided
+     * @param from
+     * @param to
+     * @param amount
+     * @param date
+     * @return
+     */
+    ConversionDetails getConversion(String from, String to, double amount, LocalDate date);
+
+    /**
+     * Converts the amount from one currency to another using the current rate
+     * @param from
+     * @param to
+     * @param amount
+     * @return
+     */
+    ConversionDetails getConversion(String from, String to, double amount);
 }

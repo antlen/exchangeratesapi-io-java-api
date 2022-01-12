@@ -66,10 +66,8 @@ public class APIClientBuilder {
         return new ApiAsyncRestClientImpl(buildService(), responseService,apiKey);
     }
 
-
     /**
-     * Returns a ApiRestClient.
-     *
+     * Returns a synchronous rest client
      * @return
      */
     public ApiRestClient buildRestClient(){
@@ -86,13 +84,47 @@ public class APIClientBuilder {
         }
     }
 
+
+    /**
+     * If you set SSL to true then ensure that your local ssl certs are upto date.
+     *
+     * If you get an error source updo date certificates and run:
+     * <pre>
+     * Update the keystore in your local JVM:  'keytool -import -alias *ALIAS_NAME* -keystore $JAVA_HOME\jre\lib\security\cacerts -file *CERT_FILE_LOCATION*'
+     *</pre>
+     * The other alternative is to use ServiceFactory(SSLContext)
+     */
     public APIClientBuilder setSSL(boolean SSL) {
         isSSL = SSL;
         return this;
     }
 
-    public APIClientBuilder setSslContext(SSLContext sslContext) {
-        this.sslContext = sslContext;
+    /**
+     * If you cannot (or do not want to) update the JVM certificate then you can pass the SSL context into
+     * the service factory.  One way to do this is:
+     *
+     * https://stackoverflow.com/questions/11646039/does-resteasy-client-support-tls-ssl
+     *
+     * <code>
+     *      // load the certificate
+     *     InputStream fis = this.getClass().getResourceAsStream("file/path/to/your/certificate.crt");
+     *     CertificateFactory cf = CertificateFactory.getInstance("X.509");
+     *     Certificate cert = cf.generateCertificate(fis);
+     *
+     *     // load the keystore that includes self-signed cert as a "trusted" entry
+     *     KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+     *     keyStore.load(null, null);
+     *     TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+     *     keyStore.setCertificateEntry("cert-alias", cert);
+     *     tmf.init(keyStore);
+     *     SSLContext ctx = SSLContext.getInstance("TLS");
+     *     ctx.init(null, tmf.getTrustManagers(), null);`
+     * </code>
+     * @param ctx
+     * @return
+     */
+    public APIClientBuilder setSslContext(SSLContext ctx) {
+        this.sslContext = ctx;
         return this;
     }
 }

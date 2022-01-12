@@ -1,7 +1,5 @@
 package exchangeratesapi.io.client.util;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 /**
  * The MIT License (MIT)
  *
@@ -26,30 +24,18 @@ import java.time.format.DateTimeFormatter;
  *	SOFTWARE.
  *
  * ------------------------------------------------
- * Focused utility class for converting to and from the expected date format for exchange rates.
+ * Focused utility class for string conversions for the service layer.
  *
  * @author antlen
  */
-public class RateDateFormatter {
-    private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+public class SymbolFormatter {
 
     /**
-     * Converts a yyyy-MM-dd string to a LocalDate
-     *
-     * @param t
+     * Converts an array of strings to a comma separated String or null if the input was null
+     * @param symbols
      * @return
      */
-    public static LocalDate toDateTime(String t){
-        return LocalDate.parse(t, DATE_FORMAT);
-    }
-
-    /**
-     * Converts a local date to a yyyy-MM-dd string or null if the input was null
-     *
-     * @param date
-     * @return
-     */
-    public static String toString(LocalDate date){
-        return date == null? null: date.format(DATE_FORMAT);
+    public static String getSymbols(String[] symbols) {
+        return symbols==null?null:String.join(",", symbols);
     }
 }

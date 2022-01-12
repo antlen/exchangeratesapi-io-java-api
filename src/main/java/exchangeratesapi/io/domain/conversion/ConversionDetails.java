@@ -1,21 +1,14 @@
-package exchangeratesapi.io.domain.rates;
+package exchangeratesapi.io.domain.conversion;
 
-import javax.annotation.Generated;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import exchangeratesapi.io.client.util.RateDateFormatter;
 
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Map;
-
+import javax.annotation.Generated;
 /**
  * The MIT License (MIT)
  *
- *	Copyright (c) 202 antlen
+ *	Copyright (c) 2022 antlen
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -36,54 +29,73 @@ import java.util.Map;
  *	SOFTWARE.
  *
  * ------------------------------------------------
- * JSON Pojo for representing the Exchange Rate resposne
+ * JSON Pojo for representing an exchange conversion
  *
  * @author antlen
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "success",
-        "timestamp",
-        "base",
+        "query",
+        "info",
+        "historical",
         "date",
-        "rates"
+        "result"
 })
 @Generated("jsonschema2pojo")
-public class ExchangeRates {
+public class ConversionDetails {
 
     @JsonProperty("success")
-    private boolean success;
+    private Boolean success;
+    @JsonProperty("query")
+    private ConversionQuery query;
+    @JsonProperty("info")
+    private ConversionInfo info;
     @JsonProperty("historical")
     private boolean historical;
-    @JsonProperty("timestamp")
-    private Integer timestamp;
-    @JsonProperty("base")
-    private String base;
     @JsonProperty("date")
     private String date;
-    @JsonProperty("rates")
-    private Map<String,Double> rates;
-    @JsonIgnore
-    private LocalDate localDate;
+    @JsonProperty("result")
+    private double result;
 
     @JsonProperty("success")
-    public boolean isSuccess() {
+    public Boolean getSuccess() {
         return success;
     }
 
+    @JsonProperty("success")
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
+
+    @JsonProperty("query")
+    public ConversionQuery getQuery() {
+        return query;
+    }
+
+    @JsonProperty("query")
+    public void setQuery(ConversionQuery query) {
+        this.query = query;
+    }
+
+    @JsonProperty("info")
+    public ConversionInfo getInfo() {
+        return info;
+    }
+
+    @JsonProperty("info")
+    public void setInfo(ConversionInfo info) {
+        this.info = info;
+    }
+
     @JsonProperty("historical")
-    public boolean isHistorical() {
+    public boolean getHistorical() {
         return historical;
     }
 
-    @JsonProperty("timestamp")
-    public Integer getTimestamp() {
-        return timestamp;
-    }
-
-    @JsonProperty("base")
-    public String getBase() {
-        return base;
+    @JsonProperty("historical")
+    public void setHistorical(boolean historical) {
+        this.historical = historical;
     }
 
     @JsonProperty("date")
@@ -91,28 +103,30 @@ public class ExchangeRates {
         return date;
     }
 
-    @JsonIgnore
-    public LocalDate getLocalDate() {
-        if(localDate == null && date !=null){
-            localDate = RateDateFormatter.toDateTime(date);
-        }
-        return localDate;
+    @JsonProperty("date")
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    @JsonProperty("rates")
-    public Map<String,Double>  getRates() {
-        return Collections.unmodifiableMap(rates);
+    @JsonProperty("result")
+    public double getResult() {
+        return result;
+    }
+
+    @JsonProperty("result")
+    public void setResult(double result) {
+        this.result = result;
     }
 
     @Override
     public String toString() {
-        return "ExchangeRates{" +
+        return "ConversionDetails{" +
                 "success=" + success +
-                ", historical=" + historical +
-                ", timestamp=" + timestamp +
-                ", base='" + base + '\'' +
+                ", query=" + query +
+                ", info=" + info +
+                ", historical='" + historical + '\'' +
                 ", date='" + date + '\'' +
-                ", rates=" + rates +
+                ", result=" + result +
                 '}';
     }
 }

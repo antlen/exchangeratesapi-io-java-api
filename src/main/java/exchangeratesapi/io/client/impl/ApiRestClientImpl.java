@@ -3,13 +3,15 @@ package exchangeratesapi.io.client.impl;
 import exchangeratesapi.io.client.ApiRestClient;
 import exchangeratesapi.io.client.service.ExchangeRatesApiV1RestService;
 import exchangeratesapi.io.client.util.RateDateFormatter;
+import exchangeratesapi.io.client.util.SymbolFormatter;
+import exchangeratesapi.io.domain.conversion.ConversionDetails;
 import exchangeratesapi.io.domain.rates.ExchangeRates;
 
 import java.time.LocalDate;
 /**
  * The MIT License (MIT)
  *
- *	Copyright (c) 2021 antlen
+ *	Copyright (c) 2022 antlen
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -55,7 +57,7 @@ public class ApiRestClientImpl implements ApiRestClient {
 
     @Override
     public ExchangeRates getExchangeRates(String base, String[] symbols) {
-        return service.getExchangeRates(apiKey, base, symbols).toCompletableFuture().join();
+        return service.getExchangeRates(apiKey, base, SymbolFormatter.getSymbols(symbols)).toCompletableFuture().join();
     }
 
     @Override
@@ -71,6 +73,17 @@ public class ApiRestClientImpl implements ApiRestClient {
     @Override
     public ExchangeRates getHistoricalRates(LocalDate date, String base, String... symbols) {
         return service.getHistoricalRates(apiKey, RateDateFormatter.toString(date),
-                                            base, symbols).toCompletableFuture().join();
+                                            base, SymbolFormatter.getSymbols(symbols)).toCompletableFuture().join();
+    }
+
+    @Override
+    public ConversionDetails getConversion(String from, String to, double amount, LocalDate date) {
+        return service.getConversion(apiKey, from, to, amount,
+                RateDateFormatter.toString(date)).toCompletableFuture().join();
+    }
+
+    @Override
+    public ConversionDetails getConversion(String from, String to, double amount) {
+        return getConversion(from, to, amount, null);
     }
 }

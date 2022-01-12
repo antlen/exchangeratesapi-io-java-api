@@ -5,11 +5,14 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.ClientRequestContext;
+import javax.ws.rs.client.ClientRequestFilter;
+import java.io.IOException;
 
 /**
  * The MIT License (MIT)
  *
- *	Copyright (c) 2021 antlen
+ *	Copyright (c) 2022 antlen
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -47,6 +50,19 @@ public class ServiceFactory {
         return buildProxy(ClientBuilder.newClient(), URI);
     }
 
+
+    /**
+     * If you set SSL to true then ensure that your local ssl certs are upto date.
+     *
+     * <pre>
+     * Update the keystore in your local JVM:  'keytool -import -alias *ALIAS_NAME* -keystore $JAVA_HOME\jre\lib\security\cacerts -file *CERT_FILE_LOCATION*'
+     *</pre>
+     * The other alternative is to use ServiceFactory(SSLContext)
+     */
+    public ExchangeRatesApiV1RestService buildV1SSLRestService(){
+        return buildProxy(ClientBuilder.newClient(), SSL_URI);
+    }
+
     /**
      * If you cannot (or do not want to) update the JVM certificate then you can pass the SSL context into
      * the service factory.  One way to do this is:
@@ -76,19 +92,14 @@ public class ServiceFactory {
         return buildProxy(client, SSL_URI);
     }
 
-    /**
-     * If you set SSL to true then ensure that your local ssl certs are upto date.
-     *
-     * <pre>
-     * Update the keystore in your local JVM:  'keytool -import -alias *ALIAS_NAME* -keystore $JAVA_HOME\jre\lib\security\cacerts -file *CERT_FILE_LOCATION*'
-     *</pre>
-     * The other alternative is to use ServiceFactory(SSLContext)
-     */
-    public ExchangeRatesApiV1RestService buildV1SSLRestService(){
-        return buildProxy(ClientBuilder.newClient(), SSL_URI);
-    }
-
     private ExchangeRatesApiV1RestService buildProxy(Client client, String url) {
+        client.register(new ClientRequestFilter(){
+            @Override
+            public void filter(ClientRequestContext ctx) throws IOException {
+                System.out.println(Thread.currentThread().getName() +" : " + ctx.getUri().toString());
+            }
+        });
+
         return ((ResteasyWebTarget)client.target(url)).proxy(ExchangeRatesApiV1RestService.class);
     }
 }

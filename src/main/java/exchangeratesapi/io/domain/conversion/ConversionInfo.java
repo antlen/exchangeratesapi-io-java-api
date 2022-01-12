@@ -1,7 +1,10 @@
-package exchangeratesapi.io.client.util;
+package exchangeratesapi.io.domain.conversion;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import javax.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 /**
  * The MIT License (MIT)
  *
@@ -26,30 +29,48 @@ import java.time.format.DateTimeFormatter;
  *	SOFTWARE.
  *
  * ------------------------------------------------
- * Focused utility class for converting to and from the expected date format for exchange rates.
+ * JSON Pojo for representing conversion information
  *
  * @author antlen
  */
-public class RateDateFormatter {
-    private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+        "timestamp",
+        "rate"
+})
+@Generated("jsonschema2pojo")
+public class ConversionInfo {
 
-    /**
-     * Converts a yyyy-MM-dd string to a LocalDate
-     *
-     * @param t
-     * @return
-     */
-    public static LocalDate toDateTime(String t){
-        return LocalDate.parse(t, DATE_FORMAT);
+    @JsonProperty("timestamp")
+    private Integer timestamp;
+    @JsonProperty("rate")
+    private Float rate;
+
+    @JsonProperty("timestamp")
+    public Integer getTimestamp() {
+        return timestamp;
     }
 
-    /**
-     * Converts a local date to a yyyy-MM-dd string or null if the input was null
-     *
-     * @param date
-     * @return
-     */
-    public static String toString(LocalDate date){
-        return date == null? null: date.format(DATE_FORMAT);
+    @JsonProperty("timestamp")
+    public void setTimestamp(Integer timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    @JsonProperty("rate")
+    public Float getRate() {
+        return rate;
+    }
+
+    @JsonProperty("rate")
+    public void setRate(Float rate) {
+        this.rate = rate;
+    }
+
+    @Override
+    public String toString() {
+        return "ConversionInfo{" +
+                "timestamp=" + timestamp +
+                ", rate=" + rate +
+                '}';
     }
 }

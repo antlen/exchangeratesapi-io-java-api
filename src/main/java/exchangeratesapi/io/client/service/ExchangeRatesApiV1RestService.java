@@ -1,5 +1,6 @@
 package exchangeratesapi.io.client.service;
 
+import exchangeratesapi.io.domain.conversion.ConversionDetails;
 import exchangeratesapi.io.domain.rates.ExchangeRates;
 
 import javax.ws.rs.*;
@@ -9,7 +10,7 @@ import java.util.concurrent.CompletionStage;
 /**
  * The MIT License (MIT)
  *
- *	Copyright (c) 2021 antlen
+ *	Copyright (c) 2022 antlen
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +51,7 @@ public interface ExchangeRatesApiV1RestService {
     @Path("/latest")
     CompletionStage<ExchangeRates> getExchangeRates(@QueryParam("access_key") String apiKey,
                                                      @QueryParam("base") String base,
-                                                     @QueryParam("symbols") String[] symbols);
+                                                     @QueryParam("symbols") String symbols);
 
     /**
      *
@@ -64,6 +65,24 @@ public interface ExchangeRatesApiV1RestService {
     CompletionStage<ExchangeRates> getHistoricalRates(@QueryParam("access_key") String apiKey,
                                                     @PathParam("date") String date,
                                                     @QueryParam("base") String base,
-                                                    @QueryParam("symbols") String[] symbols);
+                                                    @QueryParam("symbols") String symbols);
+
+    /**
+     *
+     * @param apiKey - [required] Your API Key.
+     * @param from - [required] The three-letter currency code of the currency you would like to convert from.
+     * @param to -  [required] The three-letter currency code of the currency you would like to convert to.
+     * @param amount - [required] The amount to be converted.
+     * @param date -  date	[optional] Specify a date (format YYYY-MM-DD) to use historical rates for this conversion.
+     * @return
+     */
+    @GET
+    @Path("/convert")
+    CompletionStage<ConversionDetails> getConversion(@QueryParam("access_key") String apiKey,
+                                                     @QueryParam("from") String from,
+                                                     @QueryParam("to") String to,
+                                                     @QueryParam("amount") double amount,
+                                                     @QueryParam("date") String date);
+
     ;
 }
