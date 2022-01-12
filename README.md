@@ -27,6 +27,20 @@ or if you want all responses to be served to your own ExecutorService
 APIClientBuilder builder = new APIClientBuilder(apiKey); 
 ApiAsyncRestClient client = builder.buildAsyncRestClient(Executors.newSingleThreadScheduledExecutor());
 ``` 
+### Use SSL
+If you want to connect over ssl then there are two options:<BR>
+
+1. To use the SSL certificates bundled with the JVM (should be good enough for recent jvn versions:
+``` 
+builder.setSSL(true);
+``` 
+2. Or if you do not have recent certificates installed with the JVM and will not or cannot update the ssl certificates then:
+``` 
+SSLContext ctx = getSSLContext();
+builder.setSSL(true);
+``` 
+The details are in the javadoc for creating a SSLContext.
+
 
 ### Exchange Rates
 
