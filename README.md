@@ -74,7 +74,6 @@ client.getHistoricalRates(date, "EUR", "HKD", "JPY");
 Use a callback...
 ``` 
 LocalDate date = RateDateFormatter.toDateTime("2021-10-09");
-client.getHistoricalRates(date);
 client.getHistoricalRates(date, new InvocationCallback<>() {
      @Override
       public void completed(ExchangeRates exchangeRates) {
@@ -97,5 +96,36 @@ async.getHistoricalRates(date, null)
      });
 ``` 
 
-       
-       
+### Conversions
+#### Synchrronous
+``` 
+LocalDate date = RateDateFormatter.toDateTime("2021-10-09");
+client.getConversion("JPY", "USD", 2000000.0);
+client.getConversion("JPY", "USD", 2000000.0, date);
+``` 
+#### Asynchronous
+
+Use a callback...
+``` 
+LocalDate date = RateDateFormatter.toDateTime("2021-10-09");
+client.getConversion("JPY", "USD", 2000000.0, date, new InvocationCallback<>() {
+     @Override
+      public void completed(ConversionDetails conversion) {
+              System.out.println(conversion);
+       }
+
+        @Override
+         public void failed(Throwable throwable) {
+              throwable.printStackTrace();
+         }
+   });
+``` 
+or use a CompletableFuture..
+``` 
+async.getConversion("JPY", "USD", 2000000.0, date,  null)
+     .thenAccept(conversion -> System.out.println(conversion))
+     .exceptionally(throwable -> {
+                    throwable.printStackTrace();
+                    return null;
+     });
+```    
